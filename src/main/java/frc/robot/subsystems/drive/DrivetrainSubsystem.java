@@ -14,5 +14,7 @@ public class DrivetrainSubsystem extends CommandSwerveDrivetrain {
   }
 
   @Override
-  public void periodic() {super.periodic();}
+  public void periodic() {
+    super.periodic();
+  }
 }
