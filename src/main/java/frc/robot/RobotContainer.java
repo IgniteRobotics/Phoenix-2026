@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.subsystems.drive.DriveConstants;
@@ -22,7 +24,9 @@ public class RobotContainer {
   public final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem();
 
   // The controllers are defined here
-  private final CommandXboxController joystick = new CommandXboxController(0);
+  private static final CommandXboxController joystick = new CommandXboxController(0);
+
+  //private static JoystickButton driver_x = new JoystickButton(joystick, XboxController.Button.kX.value);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -40,20 +44,20 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-   
+    joystick.x().whileTrue(drivetrain.sysIdSteer());
   }
 
   //Subsystem Default Commands
   private void configureSubsystemDefaultCommands(){
 
-    drivetrain.setDefaultCommand(
+    /*drivetrain.setDefaultCommand(
       // Drivetrain will execute this command periodically
       drivetrain.applyRequest(() ->
         DriveConstants.DEFAULT_DRIVE_REQUEST.withVelocityX(-1 * Math.copySign(Math.pow(joystick.getLeftY(),2), joystick.getLeftY()) * DriveConstants.MAX_DRIVE_SPEED) // Drive forward with negative Y (forward)
           .withVelocityY(-1 * Math.copySign(Math.pow(joystick.getLeftX(), 2), joystick.getLeftX()) * DriveConstants.MAX_DRIVE_SPEED) // Drive left with negative X (left)
           .withRotationalRate(-1 * Math.copySign(Math.pow(joystick.getRightX(), 2), joystick.getRightX()) * DriveConstants.MAX_ANGULAR_SPEED) // Drive counterclockwise with negative X (left)
         )
-    );
+    );*/
 
   }
 
