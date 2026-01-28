@@ -44,7 +44,7 @@ public class DrivetrainSubsystem extends CommandSwerveDrivetrain {
   }
 
   public Command sysIdSteer(){
-    return new InstantCommand(() -> SignalLogger.start()).andThen(m_sysIdRoutineSteer.quasistatic(Direction.kForward).withTimeout(5)).andThen(m_sysIdRoutineSteer.quasistatic(Direction.kReverse).withTimeout(5))
-            .andThen(m_sysIdRoutineSteer.dynamic(Direction.kForward).withTimeout(3)).andThen(m_sysIdRoutineSteer.dynamic(Direction.kReverse).withTimeout(3)).andThen(new WaitCommand(5)).andThen(new InstantCommand(() -> SignalLogger.stop()));
+    return m_sysIdRoutineSteer.quasistatic(Direction.kForward).withTimeout(5).andThen(m_sysIdRoutineSteer.quasistatic(Direction.kReverse).withTimeout(5))
+            .andThen(m_sysIdRoutineSteer.dynamic(Direction.kForward).withTimeout(3)).andThen(m_sysIdRoutineSteer.dynamic(Direction.kReverse).withTimeout(3));
   }
 }
