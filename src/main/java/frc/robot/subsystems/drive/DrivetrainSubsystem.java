@@ -2,6 +2,7 @@ package frc.robot.subsystems.drive;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.generated.CommandSwerveDrivetrain;
 import frc.robot.generated.TunerConstants;
 import frc.robot.statemachines.DriveState;
@@ -37,6 +38,8 @@ public class DrivetrainSubsystem extends CommandSwerveDrivetrain {
           estimate.getTrust());
     }
     driveState.adjustCurrentDriveStats(this.getStateCopy());
+    SmartDashboard.putNumber("Robot Pose X", this.getFieldPose().getX());
+    SmartDashboard.putNumber("Robot Pose Y", this.getFieldPose().getY());
   }
 
   public PIDController getTranslationPIDController(){
