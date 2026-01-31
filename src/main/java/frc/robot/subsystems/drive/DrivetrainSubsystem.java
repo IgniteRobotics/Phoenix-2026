@@ -18,13 +18,21 @@ public class DrivetrainSubsystem extends CommandSwerveDrivetrain {
         TunerConstants.BackLeft,
         TunerConstants.BackRight);
     applySteerGains();
+    applyDriveGains();
   }
   
   private void applySteerGains(){
-    this.getModule(0).getSteerMotor().getConfigurator().apply(SteerConstants.createFrontLeftSteerMotorSlot0Configs());
-    this.getModule(1).getSteerMotor().getConfigurator().apply(SteerConstants.createFrontRightSteerMotorSlot0Configs());
-    this.getModule(2).getSteerMotor().getConfigurator().apply(SteerConstants.createRearLeftSteerMotorSlot0Configs());
-    this.getModule(3).getSteerMotor().getConfigurator().apply(SteerConstants.createRearRightSteerMotorSlot0Configs());
+    this.getModule(0).getSteerMotor().getConfigurator().apply(SteerMotorConfigs.createFrontLeftSteerMotorSlot0Configs());
+    this.getModule(1).getSteerMotor().getConfigurator().apply(SteerMotorConfigs.createFrontRightSteerMotorSlot0Configs());
+    this.getModule(2).getSteerMotor().getConfigurator().apply(SteerMotorConfigs.createRearLeftSteerMotorSlot0Configs());
+    this.getModule(3).getSteerMotor().getConfigurator().apply(SteerMotorConfigs.createRearRightSteerMotorSlot0Configs());
+  }
+
+  private void applyDriveGains(){
+    this.getModule(0).getDriveMotor().getConfigurator().apply(DriveMotorConfigs.createFrontLeftDriveMotorSlot0Configs());
+    this.getModule(1).getDriveMotor().getConfigurator().apply(DriveMotorConfigs.createFrontRightDriveMotorSlot0Configs());
+    this.getModule(2).getDriveMotor().getConfigurator().apply(DriveMotorConfigs.createRearLeftDriveMotorSlot0Configs());
+    this.getModule(3).getDriveMotor().getConfigurator().apply(DriveMotorConfigs.createRearRightDriveMotorSlot0Configs());
   }
 
   @Override
@@ -48,7 +56,12 @@ public class DrivetrainSubsystem extends CommandSwerveDrivetrain {
   }
 
   public Command sysIdSteer(){
-    return m_sysIdRoutineSteer.quasistatic(Direction.kForward).withTimeout(10).andThen(m_sysIdRoutineSteer.quasistatic(Direction.kReverse).withTimeout(10))
-            .andThen(m_sysIdRoutineSteer.dynamic(Direction.kForward).withTimeout(10)).andThen(m_sysIdRoutineSteer.dynamic(Direction.kReverse).withTimeout(10));
+    return m_sysIdRoutineSteer.quasistatic(Direction.kForward).withTimeout(SteerMotorConfigs.QUASISTATIC_TIMEOUT).andThen(m_sysIdRoutineSteer.quasistatic(Direction.kReverse).withTimeout(SteerMotorConfigs.QUASISTATIC_TIMEOUT))
+            .andThen(m_sysIdRoutineSteer.dynamic(Direction.kForward).withTimeout(SteerMotorConfigs.DYNAMIC_TIMEOUT)).andThen(m_sysIdRoutineSteer.dynamic(Direction.kReverse).withTimeout(SteerMotorConfigs.DYNAMIC_TIMEOUT));
+  }
+
+  public Command sysIdTranslation(){
+    return m_sysIdRoutineTranslation.quasistatic(Direction.kForward).withTimeout(DriveMotorConfigs.QUASISTATIC_TIMEOUT).andThen(m_sysIdRoutineTranslation.quasistatic(Direction.kReverse).withTimeout(DriveMotorConfigs.QUASISTATIC_TIMEOUT))
+            .andThen(m_sysIdRoutineTranslation.dynamic(Direction.kForward).withTimeout(DriveMotorConfigs.DYNAMIC_TIMEOUT)).andThen(m_sysIdRoutineTranslation.dynamic(Direction.kReverse).withTimeout(DriveMotorConfigs.DYNAMIC_TIMEOUT));
   }
 }

@@ -3,7 +3,13 @@ package frc.robot.subsystems.drive;
 import com.ctre.phoenix6.configs.Slot0Configs;
 
 //Steer Motor Feedback and Feedforward configs
-final class SteerConstants{
+final class SteerMotorConfigs{
+    
+    private SteerMotorConfigs(){}
+
+    //SYS ID TIMEOUTs
+    protected static final int QUASISTATIC_TIMEOUT = 5;
+    protected static final int DYNAMIC_TIMEOUT = 3;
     
     //FRONT LEFT
     protected static final double FL_STEER_KP = 27.807;
