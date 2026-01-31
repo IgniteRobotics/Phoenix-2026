@@ -1,10 +1,6 @@
 package frc.robot.subsystems.drive;
 
-import com.ctre.phoenix6.SignalLogger;
-
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.CommandSwerveDrivetrain;
 import frc.robot.generated.TunerConstants;
@@ -21,6 +17,14 @@ public class DrivetrainSubsystem extends CommandSwerveDrivetrain {
         TunerConstants.FrontRight,
         TunerConstants.BackLeft,
         TunerConstants.BackRight);
+    applySteerGains();
+  }
+  
+  private void applySteerGains(){
+    this.getModule(0).getSteerMotor().getConfigurator().apply(SteerConstants.createFrontLeftSteerMotorSlot0Configs());
+    this.getModule(1).getSteerMotor().getConfigurator().apply(SteerConstants.createFrontRightSteerMotorSlot0Configs());
+    this.getModule(2).getSteerMotor().getConfigurator().apply(SteerConstants.createRearLeftSteerMotorSlot0Configs());
+    this.getModule(3).getSteerMotor().getConfigurator().apply(SteerConstants.createRearRightSteerMotorSlot0Configs());
   }
 
   @Override
@@ -44,7 +48,7 @@ public class DrivetrainSubsystem extends CommandSwerveDrivetrain {
   }
 
   public Command sysIdSteer(){
-    return m_sysIdRoutineSteer.quasistatic(Direction.kForward).withTimeout(5).andThen(m_sysIdRoutineSteer.quasistatic(Direction.kReverse).withTimeout(5))
-            .andThen(m_sysIdRoutineSteer.dynamic(Direction.kForward).withTimeout(3)).andThen(m_sysIdRoutineSteer.dynamic(Direction.kReverse).withTimeout(3));
+    return m_sysIdRoutineSteer.quasistatic(Direction.kForward).withTimeout(10).andThen(m_sysIdRoutineSteer.quasistatic(Direction.kReverse).withTimeout(10))
+            .andThen(m_sysIdRoutineSteer.dynamic(Direction.kForward).withTimeout(10)).andThen(m_sysIdRoutineSteer.dynamic(Direction.kReverse).withTimeout(10));
   }
 }

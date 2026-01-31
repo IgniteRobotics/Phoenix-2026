@@ -50,14 +50,14 @@ public class RobotContainer {
   //Subsystem Default Commands
   private void configureSubsystemDefaultCommands(){
 
-    /*drivetrain.setDefaultCommand(
+    drivetrain.setDefaultCommand(
       // Drivetrain will execute this command periodically
       drivetrain.applyRequest(() ->
         DriveConstants.DEFAULT_DRIVE_REQUEST.withVelocityX(-1 * Math.copySign(Math.pow(joystick.getLeftY(),2), joystick.getLeftY()) * DriveConstants.MAX_DRIVE_SPEED) // Drive forward with negative Y (forward)
           .withVelocityY(-1 * Math.copySign(Math.pow(joystick.getLeftX(), 2), joystick.getLeftX()) * DriveConstants.MAX_DRIVE_SPEED) // Drive left with negative X (left)
           .withRotationalRate(-1 * Math.copySign(Math.pow(joystick.getRightX(), 2), joystick.getRightX()) * DriveConstants.MAX_ANGULAR_SPEED) // Drive counterclockwise with negative X (left)
         )
-    );*/
+    );
 
   }
 
