@@ -45,6 +45,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     joystick.x().onTrue(drivetrain.sysIdSteer());
+    joystick.y().whileTrue(drivetrain.driveForward());
   }
 
   //Subsystem Default Commands

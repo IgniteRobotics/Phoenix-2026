@@ -1,6 +1,11 @@
 package frc.robot.subsystems.drive;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.CommandSwerveDrivetrain;
 import frc.robot.generated.TunerConstants;
@@ -10,6 +15,11 @@ import frc.robot.subsystems.vision.VisionSubsystem.VisionMeasurement;
 
 public class DrivetrainSubsystem extends CommandSwerveDrivetrain {
   private DriveState driveState = DriveState.getInstance();
+  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+  private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric()
+        .withDriveRequestType(DriveRequestType.Velocity)
+        .withVelocityY(0);
+
   public DrivetrainSubsystem() {
     super(
         TunerConstants.DrivetrainConstants,
@@ -53,6 +63,9 @@ public class DrivetrainSubsystem extends CommandSwerveDrivetrain {
           estimate.getTrust());
     }
     driveState.adjustCurrentDriveStats(this.getStateCopy());
+    
+    SmartDashboard.putString("Current Command",
+        this.getCurrentCommand() != null ? this.getCurrentCommand().getName() : ""); // TODO: remove (temp debugging)
   }
 
   public Command sysIdSteer(){
@@ -63,5 +76,10 @@ public class DrivetrainSubsystem extends CommandSwerveDrivetrain {
   public Command sysIdTranslation(){
     return m_sysIdRoutineTranslation.quasistatic(Direction.kForward).withTimeout(DriveMotorConfigs.QUASISTATIC_TIMEOUT).andThen(m_sysIdRoutineTranslation.quasistatic(Direction.kReverse).withTimeout(DriveMotorConfigs.QUASISTATIC_TIMEOUT))
             .andThen(m_sysIdRoutineTranslation.dynamic(Direction.kForward).withTimeout(DriveMotorConfigs.DYNAMIC_TIMEOUT)).andThen(m_sysIdRoutineTranslation.dynamic(Direction.kReverse).withTimeout(DriveMotorConfigs.DYNAMIC_TIMEOUT));
+  }
+
+  public Command driveForward(){
+    return new InstantCommand(() -> applyRequest(() -> point.withModuleDirection(new Rotation2d(0.0))))
+            .andThen(() -> applyRequest(() -> forwardStraight.withVelocityX(0.5)));
   }
 }
