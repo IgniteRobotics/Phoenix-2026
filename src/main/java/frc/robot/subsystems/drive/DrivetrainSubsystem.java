@@ -38,8 +38,6 @@ public class DrivetrainSubsystem extends CommandSwerveDrivetrain {
           estimate.getTrust());
     }
     driveState.adjustCurrentDriveStats(this.getStateCopy());
-    SmartDashboard.putNumber("Robot Pose X", this.getFieldPose().getX());
-    SmartDashboard.putNumber("Robot Pose Y", this.getFieldPose().getY());
   }
 
   public PIDController getTranslationPIDController(){
