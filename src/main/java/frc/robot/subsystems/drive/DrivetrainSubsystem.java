@@ -1,5 +1,8 @@
 package frc.robot.subsystems.drive;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.generated.CommandSwerveDrivetrain;
 import frc.robot.generated.TunerConstants;
 import frc.robot.statemachines.DriveState;
@@ -36,4 +39,22 @@ public class DrivetrainSubsystem extends CommandSwerveDrivetrain {
     }
     driveState.adjustCurrentDriveStats(this.getStateCopy());
   }
+
+  public PIDController getTranslationPIDController(){
+    PIDController controller = new PIDController(DrivePreferences.translation_kP.getValue(), 0, DrivePreferences.translation_kD.getValue());
+    controller.setTolerance(DriveConstants.TRANSLATION_ALIGN_TOLERANCE);
+    return controller;
+  }
+
+  public PIDController getRotationPIDController(){
+    PIDController controller = new PIDController(DrivePreferences.rotation_kP.getValue(), 0, DrivePreferences.rotation_kD.getValue());
+    controller.setTolerance(DriveConstants.ROTATION_ALIGN_TOLERANCE);
+    controller.enableContinuousInput(-180, 180); //TODO:Determine if input is in radians or degrees
+    return controller;
+  }
+
+  public Pose2d getFieldPose(){
+    return this.getState().Pose;
+  }
+
 }
