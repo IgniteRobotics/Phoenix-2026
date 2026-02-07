@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.subsystems.drive.DriveConstants;
@@ -24,7 +26,9 @@ public class RobotContainer {
   public final VisionSubsystem vision = new VisionSubsystem();
 
   // The controllers are defined here
-  private final CommandXboxController joystick = new CommandXboxController(0);
+  private static final CommandXboxController joystick = new CommandXboxController(0);
+
+  //private static JoystickButton driver_x = new JoystickButton(joystick, XboxController.Button.kX.value);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -42,7 +46,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-   
+    joystick.x().onTrue(drivetrain.sysIdSteer());
+    joystick.y().whileTrue(drivetrain.driveForward());
   }
 
   //Subsystem Default Commands
