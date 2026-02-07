@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,10 +18,6 @@ import frc.robot.subsystems.vision.VisionSubsystem.VisionMeasurement;
 
 public class DrivetrainSubsystem extends CommandSwerveDrivetrain {
   private DriveState driveState = DriveState.getInstance();
-  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-  private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric()
-        .withDriveRequestType(DriveRequestType.Velocity)
-        .withVelocityY(0);
 
   public DrivetrainSubsystem() {
     super(
@@ -81,8 +78,19 @@ public class DrivetrainSubsystem extends CommandSwerveDrivetrain {
   }
 
   public Command driveForward(){
-    return new InstantCommand(() -> applyRequest(() -> point.withModuleDirection(new Rotation2d(0.0))))
-            .andThen(() -> applyRequest(() -> forwardStraight.withVelocityX(0.5)));
+    SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+    SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+    SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric()
+        .withDriveRequestType(DriveRequestType.Velocity)
+        .withVelocityY(0);
+    
+    return runOnce(() -> this.seedFieldCentric())
+          .andThen(applyRequest(() -> point.withModuleDirection(new Rotation2d(0.0))))
+          .withTimeout(1)
+          .andThen(applyRequest(() -> forwardStraight.withVelocityX(0.5)))
+          .withTimeout(2)
+          .andThen(applyRequest(() -> brake))
+          .withTimeout(1);
   }
 
   public PIDController getTranslationPIDController(){
