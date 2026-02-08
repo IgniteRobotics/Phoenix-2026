@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -28,7 +27,8 @@ public class RobotContainer {
 
   private final Telemetry logger = new Telemetry(DriveConstants.MAX_DRIVE_SPEED);
 
-  //private static JoystickButton driver_x = new JoystickButton(joystick, XboxController.Button.kX.value);
+  // private static JoystickButton driver_x = new JoystickButton(joystick,
+  // XboxController.Button.kX.value);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -53,18 +53,29 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
   }
 
-  //Subsystem Default Commands
-  private void configureSubsystemDefaultCommands(){
+  // Subsystem Default Commands
+  private void configureSubsystemDefaultCommands() {
 
     drivetrain.setDefaultCommand(
-      // Drivetrain will execute this command periodically
-      drivetrain.applyRequest(() ->
-        DriveConstants.DEFAULT_DRIVE_REQUEST.withVelocityX(-1 * Math.copySign(Math.pow(joystick.getLeftY(),2), joystick.getLeftY()) * DriveConstants.MAX_DRIVE_SPEED) // Drive forward with negative Y (forward)
-          .withVelocityY(-1 * Math.copySign(Math.pow(joystick.getLeftX(), 2), joystick.getLeftX()) * DriveConstants.MAX_DRIVE_SPEED) // Drive left with negative X (left)
-          .withRotationalRate(-1 * Math.copySign(Math.pow(joystick.getRightX(), 2), joystick.getRightX()) * DriveConstants.MAX_ANGULAR_SPEED) // Drive counterclockwise with negative X (left)
-        )
-    );
-
+        // Drivetrain will execute this command periodically
+        drivetrain.applyRequest(
+            () ->
+                DriveConstants.DEFAULT_DRIVE_REQUEST
+                    .withVelocityX(
+                        -1
+                            * Math.copySign(Math.pow(joystick.getLeftY(), 2), joystick.getLeftY())
+                            * DriveConstants
+                                .MAX_DRIVE_SPEED) // Drive forward with negative Y (forward)
+                    .withVelocityY(
+                        -1
+                            * Math.copySign(Math.pow(joystick.getLeftX(), 2), joystick.getLeftX())
+                            * DriveConstants.MAX_DRIVE_SPEED) // Drive left with negative X (left)
+                    .withRotationalRate(
+                        -1
+                            * Math.copySign(Math.pow(joystick.getRightX(), 2), joystick.getRightX())
+                            * DriveConstants
+                                .MAX_ANGULAR_SPEED) // Drive counterclockwise with negative X (left)
+            ));
   }
 
   /**

@@ -22,7 +22,8 @@ public class DriveState {
     concurrentQueueMap.put(
         CameraConstants.photonCameraName_FrontLeft, new ConcurrentLinkedQueue<VisionMeasurement>());
     concurrentQueueMap.put(
-        CameraConstants.photonCameraName_FrontRight, new ConcurrentLinkedQueue<VisionMeasurement>());
+        CameraConstants.photonCameraName_FrontRight,
+        new ConcurrentLinkedQueue<VisionMeasurement>());
   }
 
   public static synchronized DriveState getInstance() {
