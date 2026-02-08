@@ -5,7 +5,6 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.hardware.*;
-import com.ctre.phoenix6.signals.*;
 import com.ctre.phoenix6.swerve.*;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.*;
 import edu.wpi.first.math.Matrix;
@@ -97,8 +96,8 @@ public class TunerConstants {
               .withSteerMotorGearRatio(kSteerGearRatio)
               .withCouplingGearRatio(kCoupleRatio)
               .withWheelRadius(kWheelRadius)
-              //.withSteerMotorGains(steerGains)
-              //.withDriveMotorGains(driveGains)
+              // .withSteerMotorGains(steerGains)
+              // .withDriveMotorGains(driveGains)
               .withSteerMotorClosedLoopOutput(kSteerClosedLoopOutput)
               .withDriveMotorClosedLoopOutput(kDriveClosedLoopOutput)
               .withSlipCurrent(kSlipCurrent)
