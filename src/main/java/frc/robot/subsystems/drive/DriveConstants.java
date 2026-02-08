@@ -26,6 +26,6 @@ public class DriveConstants {
           .withSteerRequestType(SteerRequestType.Position) // Closed Loop Steer (Default)
           .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance); // Prevents "flips"
 
-  public static final double TRANSLATION_ALIGN_TOLERANCE = 0.3; // probably meters
-  public static final double ROTATION_ALIGN_TOLERANCE = 0.3; // probably radians?
+  public static final double TRANSLATION_ALIGN_TOLERANCE = 0.01; // meters
+  public static final double ROTATION_ALIGN_TOLERANCE = 1; // degrees
 }

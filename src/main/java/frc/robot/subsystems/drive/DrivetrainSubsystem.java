@@ -5,7 +5,6 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.CommandSwerveDrivetrain;
@@ -84,12 +83,6 @@ public class DrivetrainSubsystem extends CommandSwerveDrivetrain {
           estimate.getTrust());
     }
     driveState.adjustCurrentDriveStats(this.getStateCopy());
-
-    SmartDashboard.putString(
-        "Current Command",
-        this.getCurrentCommand() != null
-            ? this.getCurrentCommand().getName()
-            : ""); // TODO: remove (temp debugging)
   }
 
   public Command sysIdSteer() {
@@ -160,7 +153,7 @@ public class DrivetrainSubsystem extends CommandSwerveDrivetrain {
         new PIDController(
             DrivePreferences.rotation_kP.getValue(), 0, DrivePreferences.rotation_kD.getValue());
     controller.setTolerance(DriveConstants.ROTATION_ALIGN_TOLERANCE);
-    controller.enableContinuousInput(-180, 180); // TODO:Determine if input is in radians or degrees
+    controller.enableContinuousInput(-180, 180); // Degrees
     return controller;
   }
 
