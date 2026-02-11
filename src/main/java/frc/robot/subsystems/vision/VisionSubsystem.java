@@ -5,8 +5,6 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.util.struct.Struct;
-import edu.wpi.first.util.struct.StructSerializable;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.statemachines.DriveState;
 import java.util.Optional;
@@ -18,7 +16,7 @@ public class VisionSubsystem extends SubsystemBase {
   private DriveState driveState = DriveState.getInstance();
   private SwerveDriveState driveStats;
 
-  public class VisionMeasurement{
+  public class VisionMeasurement {
     private EstimatedRobotPose estimatedPose;
     private double timestamp;
     private Vector<N3> trustValues;

@@ -5,8 +5,8 @@
 package frc.robot;
 
 import com.ctre.phoenix6.SignalLogger;
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Epilogue;
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,15 +33,18 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    Epilogue.configure(config -> {config.root = "Robot";});
+    Epilogue.configure(
+        config -> {
+          config.root = "Robot";
+        });
 
-    //Captures NetworkTables data (.wpilog files)
+    // Captures NetworkTables data (.wpilog files)
     DataLogManager.start();
 
-    //Start Phoenix 6 SignalLogger for CTRE device logging (.hoot files)
+    // Start Phoenix 6 SignalLogger for CTRE device logging (.hoot files)
     SignalLogger.start();
 
-    //Bind Epilogue to robot loop
+    // Bind Epilogue to robot loop
     Epilogue.bind(this);
   }
 

@@ -18,12 +18,11 @@ import frc.robot.subsystems.vision.VisionSubsystem;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-
 @Logged
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  //already logged with telemetry class
+  // already logged with telemetry class
   public final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem();
 
   public final VisionSubsystem vision = new VisionSubsystem();
