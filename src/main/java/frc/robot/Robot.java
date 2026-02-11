@@ -5,6 +5,9 @@
 package frc.robot;
 
 import com.ctre.phoenix6.SignalLogger;
+import edu.wpi.first.epilogue.Epilogue;
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -14,9 +17,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * the TimedRobot documentation. If you change the name of this class or the package after creating
  * this project, you must also update the Main.java file in the project.
  */
+@Logged
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
+  @Logged(name = "container")
   private final RobotContainer m_robotContainer;
 
   /**
@@ -27,6 +32,20 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    Epilogue.configure(
+        config -> {
+          config.root = "Robot";
+        });
+
+    // Captures NetworkTables data (.wpilog files)
+    DataLogManager.start();
+
+    // Start Phoenix 6 SignalLogger for CTRE device logging (.hoot files)
+    SignalLogger.start();
+
+    // Bind Epilogue to robot loop
+    Epilogue.bind(this);
   }
 
   /**
@@ -47,9 +66,7 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {
-    SignalLogger.stop();
-  }
+  public void disabledInit() {}
 
   @Override
   public void disabledPeriodic() {}
@@ -78,7 +95,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    SignalLogger.start();
   }
 
   /** This function is called periodically during operator control. */
