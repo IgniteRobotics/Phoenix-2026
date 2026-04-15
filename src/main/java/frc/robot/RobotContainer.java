@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
-import frc.robot.subsystems.vision.VisionSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -24,8 +23,6 @@ public class RobotContainer {
 
   // already logged with telemetry class
   public final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem();
-
-  public final VisionSubsystem vision = new VisionSubsystem();
 
   // The controllers are defined here
   private static final CommandXboxController joystick = new CommandXboxController(0);
