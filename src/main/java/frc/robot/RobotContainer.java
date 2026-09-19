@@ -8,8 +8,11 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.ShootPiece;
+import frc.robot.preferences.DoublePreference;
 import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.drive.DrivetrainSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -23,11 +26,47 @@ public class RobotContainer {
 
   // already logged with telemetry class
   public final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem();
+  public final ShooterSubsystem m_shooter = new ShooterSubsystem();
 
   // The controllers are defined here
   private static final CommandXboxController joystick = new CommandXboxController(0);
 
   private final Telemetry logger = new Telemetry(DriveConstants.MAX_DRIVE_SPEED);
+
+  private DoublePreference shooterIndexPower =
+      new DoublePreference("shooter/ShootingIndexPower", 0.5);
+
+  // Cannd shot angles
+  private DoublePreference wingShotAngle = new DoublePreference("shooter/wingShotAngle", 34);
+  private DoublePreference podiumShotAngle = new DoublePreference("shooter/podiumShotAngle", 52.5);
+  private DoublePreference subShotAngle = new DoublePreference("shooter/subShotAngle", 93);
+
+  // Canned shot RPM
+  private DoublePreference wingShotRPM = new DoublePreference("shooter/wingRPM", 4000);
+  private DoublePreference podiumShotRPM = new DoublePreference("shooter/podiumRPM", 3200);
+  private DoublePreference subShotRPM = new DoublePreference("shooter/subRPM", 3200);
+
+  private final Command shootSubwoofer =
+      new ShootPiece(
+          m_shooter,
+          subShotAngle,
+          subShotRPM,
+          shooterIndexPower,
+          () -> joystick.leftTrigger().getAsBoolean());
+  private final Command shootPodium =
+      new ShootPiece(
+          m_shooter,
+          podiumShotAngle,
+          podiumShotRPM,
+          shooterIndexPower,
+          () -> joystick.leftTrigger().getAsBoolean());
+  private final Command shootWing =
+      new ShootPiece(
+          m_shooter,
+          wingShotAngle,
+          wingShotRPM,
+          shooterIndexPower,
+          () -> joystick.leftTrigger().getAsBoolean());
 
   // private static JoystickButton driver_x = new JoystickButton(joystick,
   // XboxController.Button.kX.value);
@@ -48,11 +87,16 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    joystick.a().whileTrue(shootSubwoofer);
+    joystick.b().whileTrue(shootPodium);
+    joystick.y().whileTrue(shootWing);
+    /*
     joystick.x().onTrue(drivetrain.sysIdSteer());
     joystick.y().onTrue(drivetrain.sysIdTranslation());
     joystick.a().onTrue(drivetrain.driveForward());
     joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
     drivetrain.registerTelemetry(logger::telemeterize);
+    */
   }
 
   // Subsystem Default Commands

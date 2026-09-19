@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -25,22 +25,15 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.Robot;
 import frc.robot.preferences.DoublePreference;
 
@@ -61,20 +54,19 @@ public class ShooterSubsystem extends SubsystemBase {
 
   // shooterRoller preferences
   private DoublePreference shooterkPPreference =
-      new DoublePreference("shooter/RPMkP", Constants.ShooterConstants.ROLLER_kP);
+      new DoublePreference("shooter/RPMkP", ShooterConstants.ROLLER_kP);
   private DoublePreference shooterkIPreference =
-      new DoublePreference("shooter/RPMkI", Constants.ShooterConstants.ROLLER_kI);
+      new DoublePreference("shooter/RPMkI", ShooterConstants.ROLLER_kI);
   private DoublePreference shooterkDPreference =
-      new DoublePreference("shooter/RPMkD", Constants.ShooterConstants.ROLLER_kD);
+      new DoublePreference("shooter/RPMkD", ShooterConstants.ROLLER_kD);
   private DoublePreference shooterkFPreference =
-      new DoublePreference("shooter/RPMkF", Constants.ShooterConstants.ROLLER_kF);
+      new DoublePreference("shooter/RPMkF", ShooterConstants.ROLLER_kF);
   private SoftwareLimitSwitchConfigs m_positionSoftLimitConfig = new SoftwareLimitSwitchConfigs();
   private MotionMagicConfigs m_positionMotionMagicConfigs = new MotionMagicConfigs();
   private MotorOutputConfigs m_positionMotorConfig = new MotorOutputConfigs();
   private TalonFXConfiguration m_fxCfg = new TalonFXConfiguration();
 
   public MotionMagicVoltage shooterPosition = new MotionMagicVoltage(0);
-  private RobotState m_robotState = RobotState.getInstance();
 
   private DigitalInput m_indexerBeamBreak = new DigitalInput(0);
 
@@ -127,12 +119,10 @@ public class ShooterSubsystem extends SubsystemBase {
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
 
-    m_shooterMotor =
-        new SparkMax(Constants.CANConstants.SHOOTER_MOTOR_LEADERCanId, MotorType.kBrushless);
-    m_shooterIndexMotor =
-        new SparkMax(Constants.CANConstants.SHOOTER_INDEX_MOTOR, MotorType.kBrushless);
-    m_shooterPositionMotor = new TalonFX(Constants.CANConstants.SHOOTER_POSITION_MOTOR);
-    m_shooterPositionCancoder = new CANcoder(Constants.CANConstants.SHOOTER_POSITION_CANCODER);
+    m_shooterMotor = new SparkMax(ShooterConstants.SHOOTER_MOTOR_LEADERCanId, MotorType.kBrushless);
+    m_shooterIndexMotor = new SparkMax(ShooterConstants.SHOOTER_INDEX_MOTOR, MotorType.kBrushless);
+    m_shooterPositionMotor = new TalonFX(ShooterConstants.SHOOTER_POSITION_MOTOR);
+    m_shooterPositionCancoder = new CANcoder(ShooterConstants.SHOOTER_POSITION_CANCODER);
 
     m_shooterEncoder = m_shooterMotor.getEncoder();
     m_shooterIndexEncoder = m_shooterIndexMotor.getEncoder();
@@ -171,7 +161,7 @@ public class ShooterSubsystem extends SubsystemBase {
     config.closedLoop.i(shooterkIPreference.get());
     config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     config.closedLoop.outputRange(
-        Constants.ShooterConstants.ROLLER_MIN_OUTPUT, Constants.ShooterConstants.ROLLER_MAX_OUTPUT);
+        ShooterConstants.ROLLER_MIN_OUTPUT, ShooterConstants.ROLLER_MAX_OUTPUT);
     config.closedLoop.feedForward.kV(shooterkFPreference.get());
   }
 
@@ -212,11 +202,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
     configurator.apply(motorOutputConfigs, 0.050);
 
-    slot0PID.kV = Constants.ShooterConstants.POSITION_kV;
-    slot0PID.kS = Constants.ShooterConstants.POSITION_kS;
-    slot0PID.kP = Constants.ShooterConstants.POSITION_kP;
-    slot0PID.kI = Constants.ShooterConstants.POSITION_kI;
-    slot0PID.kD = Constants.ShooterConstants.POSITION_kD;
+    slot0PID.kV = ShooterConstants.POSITION_kV;
+    slot0PID.kS = ShooterConstants.POSITION_kS;
+    slot0PID.kP = ShooterConstants.POSITION_kP;
+    slot0PID.kI = ShooterConstants.POSITION_kI;
+    slot0PID.kD = ShooterConstants.POSITION_kD;
 
     configurator.apply(slot0PID, 0.050);
 
@@ -237,38 +227,33 @@ public class ShooterSubsystem extends SubsystemBase {
   private void configureCancoder(CANcoder cancoder) {
     CANcoderConfiguration config = new CANcoderConfiguration();
     config.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-    config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
+    config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
     config.MagnetSensor.MagnetOffset = 0;
     cancoder.getConfigurator().apply(config);
     cancoder.getAbsolutePosition().setUpdateFrequency(100);
     cancoder.getPosition().setUpdateFrequency(100);
     cancoder.getVelocity().setUpdateFrequency(100);
-    cancoder.setPosition(degreesToCANcoder(0.5, Constants.ShooterConstants.ARM_CANCODER_RATIO));
+    cancoder.setPosition(degreesToCANcoder(0.5, ShooterConstants.ARM_CANCODER_RATIO));
   }
 
   public void spinPower(double power) {
     m_shooterMotor.set(
         MathUtil.clamp(
-            power,
-            Constants.ShooterConstants.ROLLER_MIN_OUTPUT,
-            Constants.ShooterConstants.ROLLER_MAX_OUTPUT));
+            power, ShooterConstants.ROLLER_MIN_OUTPUT, ShooterConstants.ROLLER_MAX_OUTPUT));
   }
 
   public void spinRPM(double rpm) {
     targetVelocity = rpm;
     m_RollerPidController.setReference(
-        MathUtil.clamp(
-            rpm,
-            -Constants.ShooterConstants.ROLLER_MAX_RPM,
-            Constants.ShooterConstants.ROLLER_MAX_RPM),
+        MathUtil.clamp(rpm, -ShooterConstants.ROLLER_MAX_RPM, ShooterConstants.ROLLER_MAX_RPM),
         SparkFlex.ControlType.kVelocity);
   }
 
   @Logged
   public boolean atRPM() {
     if (Robot.isSimulation()) return true;
-    return velocity >= targetVelocity - Constants.ShooterConstants.VELOCITY_TOLERANCE
-        && velocity <= targetVelocity + Constants.ShooterConstants.VELOCITY_TOLERANCE;
+    return velocity >= targetVelocity - ShooterConstants.VELOCITY_TOLERANCE
+        && velocity <= targetVelocity + ShooterConstants.VELOCITY_TOLERANCE;
   }
 
   public void runIndex(double power) {
@@ -294,18 +279,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public double getAngleDegrees() {
     return CANcoderToDegrees(
         m_shooterPositionCancoder.getAbsolutePosition().getValueAsDouble(),
-        Constants.ShooterConstants.ARM_CANCODER_RATIO);
-  }
-
-  @Logged
-  public Pose3d getStartPose3d() {
-    return new Pose3d(robotPose2d)
-        .plus(
-            new Transform3d(
-                ShooterConstants.TRANSLATION_OFFSET,
-                0,
-                ShooterConstants.ELEVATION,
-                new Rotation3d(0, -getAngleRadians(), Math.PI)));
+        ShooterConstants.ARM_CANCODER_RATIO);
   }
 
   @Logged
@@ -321,14 +295,14 @@ public class ShooterSubsystem extends SubsystemBase {
   public void setAngleDegrees(double angle) {
     this.targetPosition = angle;
     // setPositionRevolutions(angle.ShooterConstants.POSITION_DEGREE_PER_MOTOR_REV);
-    setPositionRevolutions(degreesToCANcoder(angle, Constants.ShooterConstants.ARM_CANCODER_RATIO));
+    setPositionRevolutions(degreesToCANcoder(angle, ShooterConstants.ARM_CANCODER_RATIO));
   }
 
   @Logged
   public boolean armAtSetpoint() {
     if (Robot.isSimulation()) return true;
-    return getAngleDegrees() >= targetPosition - Constants.ShooterConstants.POSITION_TOLERANCE
-        && getAngleDegrees() <= targetPosition + Constants.ShooterConstants.POSITION_TOLERANCE;
+    return getAngleDegrees() >= targetPosition - ShooterConstants.POSITION_TOLERANCE
+        && getAngleDegrees() <= targetPosition + ShooterConstants.POSITION_TOLERANCE;
   }
 
   public void stopRoller() {
@@ -385,12 +359,6 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    if (getIndexerBeamBreak()) {
-      m_robotState.setHasNote(true);
-    } else {
-      m_robotState.setHasNote(false);
-    }
-
     temp = m_shooterMotor.getMotorTemperature();
     velocity = m_shooterEncoder.getVelocity();
     current = m_shooterMotor.getOutputCurrent();
@@ -426,8 +394,6 @@ public class ShooterSubsystem extends SubsystemBase {
     // positionSlot0Configs.kD = positionkDPreference.get();
 
     // m_shooterPositionMotor.getConfigurator().apply(positionSlot0Configs, 0.050);
-
-    robotPose2d = m_robotState.getRobotPose();
   }
 
   public void simulationPeriodic() {
