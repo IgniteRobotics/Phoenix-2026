@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.diagnostics.CanInventoryLogger;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -41,6 +42,9 @@ public class Robot extends TimedRobot {
     // Captures NetworkTables data (.wpilog files)
     DataLogManager.start();
 
+    // Log CTRE device serial numbers so Flashpoint can track physical motors across swaps
+    CanInventoryLogger.start();
+
     // Start Phoenix 6 SignalLogger for CTRE device logging (.hoot files)
     SignalLogger.start();
 
@@ -66,7 +70,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    CanInventoryLogger.recheck();
+  }
 
   @Override
   public void disabledPeriodic() {}
